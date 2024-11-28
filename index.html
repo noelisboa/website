@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuesta de 5 Preguntas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Encuesta: Responde las siguientes 5 preguntas</h1>
+        <form id="quiz-form">
+            <div class="question">
+                <p>1. ¿Cuál es tu color favorito?</p>
+                <label><input type="radio" name="q1" value="Rojo"> Rojo</label><br>
+                <label><input type="radio" name="q1" value="Azul"> Azul</label><br>
+                <label><input type="radio" name="q1" value="Verde"> Verde</label><br>
+                <label><input type="radio" name="q1" value="Amarillo"> Amarillo</label><br>
+            </div>
+            <div class="question">
+                <p>2. ¿Qué deporte prefieres?</p>
+                <label><input type="radio" name="q2" value="Fútbol"> Fútbol</label><br>
+                <label><input type="radio" name="q2" value="Baloncesto"> Baloncesto</label><br>
+                <label><input type="radio" name="q2" value="Tenis"> Tenis</label><br>
+                <label><input type="radio" name="q2" value="Natación"> Natación</label><br>
+            </div>
+            <div class="question">
+                <p>3. ¿Cuál es tu comida favorita?</p>
+                <label><input type="radio" name="q3" value="Pizza"> Pizza</label><br>
+                <label><input type="radio" name="q3" value="Sushi"> Sushi</label><br>
+                <label><input type="radio" name="q3" value="Hamburguesa"> Hamburguesa</label><br>
+                <label><input type="radio" name="q3" value="Pasta"> Pasta</label><br>
+            </div>
+            <div class="question">
+                <p>4. ¿Qué tipo de música te gusta más?</p>
+                <label><input type="radio" name="q4" value="Rock"> Rock</label><br>
+                <label><input type="radio" name="q4" value="Pop"> Pop</label><br>
+                <label><input type="radio" name="q4" value="Clásica"> Clásica</label><br>
+                <label><input type="radio" name="q4" value="Jazz"> Jazz</label><br>
+            </div>
+            <div class="question">
+                <p>5. ¿Te gustaría viajar al espacio?</p>
+                <label><input type="radio" name="q5" value="Sí"> Sí</label><br>
+                <label><input type="radio" name="q5" value="No"> No</label><br>
+            </div>
+            <button type="button" onclick="submitQuiz()">Enviar respuestas</button>
+        </form>
+        <div id="result" style="display:none;"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
