@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Validación de Acceso</title>
+    <title>Validación Manual</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,42 +42,42 @@
         button:hover {
             background-color: #0056b3;
         }
-        .error {
-            color: red;
-            font-size: 0.9em;
+        .status {
+            margin-top: 10px;
+            font-size: 1rem;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Validación de Acceso</h1>
-        <p>Ingresa tus datos para validar el acceso:</p>
+        <h1>Validación Manual</h1>
+        <p>Ingresa tu nombre y apellido para solicitar acceso:</p>
         <form id="accessForm">
             <input type="text" id="nombre" placeholder="Nombre" required>
             <input type="text" id="apellido" placeholder="Apellido" required>
-            <button type="submit">Validar</button>
+            <button type="submit">Solicitar Acceso</button>
         </form>
-        <p id="status" class="error"></p>
+        <p id="status" class="status"></p>
     </div>
     <script>
         const form = document.getElementById('accessForm');
         const status = document.getElementById('status');
 
         form.addEventListener('submit', async (e) => {
-            e.preventDefault(); // Evita la recarga de la página
+            e.preventDefault();
 
             const nombre = document.getElementById('nombre').value.trim();
             const apellido = document.getElementById('apellido').value.trim();
 
-            // Validar en el cliente (opcional)
             if (!nombre || !apellido) {
                 status.textContent = 'Por favor, completa todos los campos.';
+                status.style.color = 'red';
                 return;
             }
 
             try {
-                // Enviar datos al servidor para validar
-                const response = await fetch('/validar', {
+                // Enviar datos al servidor
+                const response = await fetch('/solicitar-acceso', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -87,15 +87,16 @@
 
                 const data = await response.json();
 
-                if (response.ok && data.acceso) {
-                    // Redirigir a la página de preguntas si es válido
-                    window.location.href = 'preguntas.html';
+                if (response.ok) {
+                    status.textContent = 'Solicitud enviada. Esperando validación...';
+                    status.style.color = 'green';
                 } else {
-                    // Mostrar mensaje de error si no es válido
-                    status.textContent = data.mensaje || 'Acceso denegado.';
+                    status.textContent = data.mensaje || 'Error al enviar la solicitud.';
+                    status.style.color = 'red';
                 }
             } catch (error) {
-                status.textContent = 'Error al conectar con el servidor. Inténtalo nuevamente.';
+                status.textContent = 'No se pudo conectar con el servidor.';
+                status.style.color = 'red';
             }
         });
     </script>
