@@ -1,104 +1,35 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Validación Manual</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-        }
-        .container {
-            text-align: center;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 400px;
-        }
-        input {
-            width: 90%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .status {
-            margin-top: 10px;
-            font-size: 1rem;
-        }
-    </style>
+    <title>Solicitud de Acceso</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Validación Manual</h1>
-        <p>Ingresa tu nombre y apellido para solicitar acceso:</p>
-        <form id="accessForm">
-            <input type="text" id="nombre" placeholder="Nombre" required>
-            <input type="text" id="apellido" placeholder="Apellido" required>
-            <button type="submit">Solicitar Acceso</button>
-        </form>
-        <p id="status" class="status"></p>
-    </div>
+    <h2>Ingrese sus datos para solicitar acceso</h2>
+    <form id="access-form">
+        <label for="name">Nombre:</label>
+        <input type="text" id="name" name="name" required>
+        <br>
+        <label for="surname">Apellido:</label>
+        <input type="text" id="surname" name="surname" required>
+        <br>
+        <button type="submit">Enviar</button>
+    </form>
     <script>
-        const form = document.getElementById('accessForm');
-        const status = document.getElementById('status');
-
-        form.addEventListener('submit', async (e) => {
+        document.getElementById('access-form').addEventListener('submit', async function (e) {
             e.preventDefault();
+            const name = document.getElementById('name').value;
+            const surname = document.getElementById('surname').value;
 
-            const nombre = document.getElementById('nombre').value.trim();
-            const apellido = document.getElementById('apellido').value.trim();
+            const response = await fetch('/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, surname })
+            });
 
-            if (!nombre || !apellido) {
-                status.textContent = 'Por favor, completa todos los campos.';
-                status.style.color = 'red';
-                return;
-            }
-
-            try {
-                // Enviar datos al servidor
-                const response = await fetch('/solicitar-acceso', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ nombre, apellido }),
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    status.textContent = 'Solicitud enviada. Esperando validación...';
-                    status.style.color = 'green';
-                } else {
-                    status.textContent = data.mensaje || 'Error al enviar la solicitud.';
-                    status.style.color = 'red';
-                }
-            } catch (error) {
-                status.textContent = 'No se pudo conectar con el servidor.';
-                status.style.color = 'red';
-            }
+            const data = await response.json();
+            alert(data.message);
         });
     </script>
 </body>
 </html>
+
