@@ -3,50 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encuesta de 5 Preguntas</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Validación Manual</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+        }
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .status {
+            margin-top: 10px;
+            font-size: 1rem;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1>Encuesta: Responde las siguientes 5 preguntas</h1>
-        <form id="quiz-form">
-            <div class="question">
-                <p>1. ¿Cuál es tu color favorito?</p>
-                <label><input type="radio" name="q1" value="Rojo"> Rojo</label><br>
-                <label><input type="radio" name="q1" value="Azul"> Azul</label><br>
-                <label><input type="radio" name="q1" value="Verde"> Verde</label><br>
-                <label><input type="radio" name="q1" value="Amarillo"> Amarillo</label><br>
-            </div>
-            <div class="question">
-                <p>2. ¿Qué deporte prefieres?</p>
-                <label><input type="radio" name="q2" value="Fútbol"> Fútbol</label><br>
-                <label><input type="radio" name="q2" value="Baloncesto"> Baloncesto</label><br>
-                <label><input type="radio" name="q2" value="Tenis"> Tenis</label><br>
-                <label><input type="radio" name="q2" value="Natación"> Natación</label><br>
-            </div>
-            <div class="question">
-                <p>3. ¿Cuál es tu comida favorita?</p>
-                <label><input type="radio" name="q3" value="Pizza"> Pizza</label><br>
-                <label><input type="radio" name="q3" value="Sushi"> Sushi</label><br>
-                <label><input type="radio" name="q3" value="Hamburguesa"> Hamburguesa</label><br>
-                <label><input type="radio" name="q3" value="Pasta"> Pasta</label><br>
-            </div>
-            <div class="question">
-                <p>4. ¿Qué tipo de música te gusta más?</p>
-                <label><input type="radio" name="q4" value="Rock"> Rock</label><br>
-                <label><input type="radio" name="q4" value="Pop"> Pop</label><br>
-                <label><input type="radio" name="q4" value="Clásica"> Clásica</label><br>
-                <label><input type="radio" name="q4" value="Jazz"> Jazz</label><br>
-            </div>
-            <div class="question">
-                <p>5. ¿Te gustaría viajar al espacio?</p>
-                <label><input type="radio" name="q5" value="Sí"> Sí</label><br>
-                <label><input type="radio" name="q5" value="No"> No</label><br>
-            </div>
-            <button type="button" onclick="submitQuiz()">Enviar respuestas</button>
+        <h1>Validación Manual</h1>
+        <p>Ingresa tu nombre y apellido para solicitar acceso:</p>
+        <form id="accessForm">
+            <input type="text" id="nombre" placeholder="Nombre" required>
+            <input type="text" id="apellido" placeholder="Apellido" required>
+            <button type="submit">Solicitar Acceso</button>
         </form>
-        <div id="result" style="display:none;"></div>
+        <p id="status" class="status"></p>
     </div>
-    <script src="script.js"></script>
+    <script>
+        const form = document.getElementById('accessForm');
+        const status = document.getElementById('status');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nombre = document.getElementById('nombre').value.trim();
+            const apellido = document.getElementById('apellido').value.trim();
+
+            if (!nombre || !apellido) {
+                status.textContent = 'Por favor, completa todos los campos.';
+                status.style.color = 'red';
+                return;
+            }
+
+            try {
+                // Enviar datos al servidor
+                const response = await fetch('/solicitar-acceso', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ nombre, apellido }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    status.textContent = 'Solicitud enviada. Esperando validación...';
+                    status.style.color = 'green';
+                } else {
+                    status.textContent = data.mensaje || 'Error al enviar la solicitud.';
+                    status.style.color = 'red';
+                }
+            } catch (error) {
+                status.textContent = 'No se pudo conectar con el servidor.';
+                status.style.color = 'red';
+            }
+        });
+    </script>
 </body>
 </html>
