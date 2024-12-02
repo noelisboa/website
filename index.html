@@ -2,21 +2,8 @@
 <html>
 <head>
     <title>Solicitud de Acceso</title>
-</head>
-<body>
-    <h2>Ingrese sus datos para solicitar acceso</h2>
-    <form id="access-form">
-        <label for="name">Nombre:</label>
-        <input type="text" id="name" name="name" required>
-        <br>
-        <label for="surname">Apellido:</label>
-        <input type="text" id="surname" name="surname" required>
-        <br>
-        <button type="submit">Enviar</button>
-    </form>
     <script>
-        document.getElementById('access-form').addEventListener('submit', async function (e) {
-            e.preventDefault();
+        async function sendRequest() {
             const name = document.getElementById('name').value;
             const surname = document.getElementById('surname').value;
 
@@ -26,10 +13,15 @@
                 body: JSON.stringify({ name, surname })
             });
 
-            const data = await response.json();
-            alert(data.message);
-        });
+            const result = await response.json();
+            alert(result.message);
+        }
     </script>
+</head>
+<body>
+    <h1>Solicitud de Acceso</h1>
+    <input type="text" id="name" placeholder="Nombre" required>
+    <input type="text" id="surname" placeholder="Apellido" required>
+    <button onclick="sendRequest()">Enviar</button>
 </body>
 </html>
-

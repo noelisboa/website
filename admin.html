@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Panel de Administración</title>
+    <script>
+        async function approveRequest(name, surname) {
+            const response = await fetch('/approve', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, surname })
+            });
+
+            const result = await response.json();
+            alert(result.message || result.error);
+            location.reload();  // Recargar la página para actualizar el estado
+        }
+    </script>
+</head>
+<body>
+    <h1>Solicitudes Pendientes</h1>
+    <ul id="requests">
+        <!-- Las solicitudes se cargan dinámicamente -->
+        {% for req in requests %}
+            {% if req.status == "pending" %}
+                <li>
+                    {{ req.name }} {{ req.surname }}
+                    <button onclick="approveRequest('{{ req.name }}', '{{ req.surname }}')">Aprobar</button>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</body>
+</html>
